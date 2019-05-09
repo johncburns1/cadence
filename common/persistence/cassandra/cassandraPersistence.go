@@ -164,7 +164,8 @@ const (
 		`event_store_version: ?, ` +
 		`branch_token: ?, ` +
 		`cron_schedule: ?, ` +
-		`expiration_seconds: ? ` +
+		`expiration_seconds: ?, ` +
+		`search_attributes: ? ` +
 		`}`
 
 	templateReplicationStateType = `{` +
@@ -1400,6 +1401,7 @@ func (d *cassandraPersistence) CreateWorkflowExecutionWithinBatch(request *p.Int
 			request.BranchToken,
 			request.CronSchedule,
 			request.ExpirationSeconds,
+			request.SearchAttributes,
 			request.NextEventID,
 			defaultVisibilityTimestamp,
 			rowTypeExecutionTaskID)
@@ -1469,6 +1471,7 @@ func (d *cassandraPersistence) CreateWorkflowExecutionWithinBatch(request *p.Int
 			request.BranchToken,
 			request.CronSchedule,
 			request.ExpirationSeconds,
+			request.SearchAttributes,
 			request.ReplicationState.CurrentVersion,
 			request.ReplicationState.StartVersion,
 			request.ReplicationState.LastWriteVersion,
@@ -1659,6 +1662,7 @@ func (d *cassandraPersistence) updateMutableState(batch *gocql.Batch, executionI
 			executionInfo.BranchToken,
 			executionInfo.CronSchedule,
 			executionInfo.ExpirationSeconds,
+			executionInfo.SearchAttributes,
 			executionInfo.NextEventID,
 			d.shardID,
 			rowTypeExecution,
@@ -1728,6 +1732,7 @@ func (d *cassandraPersistence) updateMutableState(batch *gocql.Batch, executionI
 			executionInfo.BranchToken,
 			executionInfo.CronSchedule,
 			executionInfo.ExpirationSeconds,
+			executionInfo.SearchAttributes,
 			replicationState.CurrentVersion,
 			replicationState.StartVersion,
 			replicationState.LastWriteVersion,
@@ -3814,6 +3819,8 @@ func createWorkflowExecutionInfo(result map[string]interface{}) *p.InternalWorkf
 			info.CronSchedule = v.(string)
 		case "expiration_seconds":
 			info.ExpirationSeconds = int32(v.(int))
+		case "search_attributes":
+			info.SearchAttributes = v.(map[string][]byte)
 		}
 	}
 	info.CompletionEvent = p.NewDataBlob(completionEventData, completionEventEncoding)

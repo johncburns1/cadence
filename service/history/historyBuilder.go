@@ -483,6 +483,7 @@ func (b *historyBuilder) newWorkflowExecutionStartedEvent(
 	attributes.Initiator = startRequest.ContinueAsNewInitiator
 	attributes.FirstDecisionTaskBackoffSeconds = startRequest.FirstDecisionTaskBackoffSeconds
 	attributes.Memo = request.Memo
+	attributes.SearchAttributes = request.SearchAttributes
 
 	parentInfo := startRequest.ParentExecutionInfo
 	if parentInfo != nil {
