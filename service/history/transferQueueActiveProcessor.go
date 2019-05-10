@@ -395,9 +395,8 @@ func (t *transferQueueActiveProcessorImpl) processCloseExecution(task *persisten
 	var wfCloseTime int64
 	if !ok {
 		return &workflow.InternalServiceError{Message: "Unable to get workflow completion event."}
-	} else {
-		wfCloseTime = completionEvent.GetTimestamp()
 	}
+	wfCloseTime = completionEvent.GetTimestamp()
 	parentDomainID := executionInfo.ParentDomainID
 	parentWorkflowID := executionInfo.ParentWorkflowID
 	parentRunID := executionInfo.ParentRunID
